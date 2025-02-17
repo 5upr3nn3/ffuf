@@ -2,7 +2,61 @@ package ffuf
 
 import (
 	"context"
+	"time"
 )
+
+// ScanConfig holds all configuration options for the scanner
+type ScanConfig struct {
+	// Target configuration
+	URL            string
+	Method         string
+	Headers        map[string]string
+	Body           []byte
+	Cookies        []string
+	FollowRedirect bool
+	
+	// Wordlist configuration 
+	Wordlists      []string
+	InputMode      string // "clusterbomb", "pitchfork", "sniper"
+	
+	// Execution configuration
+	Threads        int
+	Delay          time.Duration
+	Timeout        time.Duration
+	RetryCount     int
+	
+	// Matcher configuration
+	StatusCodes    []int
+	Size           []int64
+	Words          []int64
+	Lines          []int64
+	Regexp         string
+	
+	// Filter configuration
+	FilterStatus   []int
+	FilterSize     []int64
+	FilterWords    []int64
+	FilterLines    []int64
+	FilterRegexp   string
+	
+	// Output configuration
+	OutputFormat   string
+	Verbose        bool
+}
+
+// NewDefaultConfig returns a ScanConfig with sensible defaults
+func NewDefaultConfig() *ScanConfig {
+	return &ScanConfig{
+		Method:         "GET",
+		InputMode:      "clusterbomb",
+		Threads:        10,
+		Timeout:        10 * time.Second,
+		RetryCount:     0,
+		FollowRedirect: false,
+		Headers:        make(map[string]string),
+		StatusCodes:    []int{200, 204, 301, 302, 307, 401, 403, 405},
+	}
+}
 
 type Config struct {
 	AutoCalibration           bool                  `json:"autocalibration"`
